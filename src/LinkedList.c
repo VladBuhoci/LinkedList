@@ -4,256 +4,252 @@
 #include "LinkedList.h"
 
 
-Node* CreateNode(void* _item)
+Node* create_node(void* item)
 {
-	Node* newNode = malloc(sizeof(Node));
-	newNode->item = _item;
-	newNode->nextNode = NULL;
+	Node* new_node = malloc(sizeof(Node));
+	if (new_node) {
+		new_node->item = item;
+		new_node->next_node = NULL;
+	}
 
-	return newNode;
+	return new_node;
 }
 
-int ListLength(Node* listHeadNode)
+int list_length(Node* list_head_node)
 {
-	Node* node = listHeadNode;
+	Node* node = list_head_node;
 	int size = 0;
 
-	while (node)
-	{
+	while (node) {
 		size += 1;
-		node = node->nextNode;
+		node = node->next_node;
 	}
 
 	return size;
 }
 
-void PrintList(Node* listHeadNode, int bShowCount, void custom_printer(void* _item, int pos))
+void print_list(Node* list_head_node, int show_count, void custom_printer(void* item, int pos))
 {
-	Node* node = listHeadNode;
+	Node* node = list_head_node;
 	int counter = 0;
 
-	if (bShowCount == TRUE)
-		printf(" ~ List of size %d with the following content:\n", ListLength(listHeadNode));
+	if (show_count == TRUE)
+		printf(" ~ List of size %d with the following content:\n", list_length(list_head_node));
 	else
 		printf(" ~ List with the following content:\n");
 
 	printf("    [\n");
 
-	while (node)
-	{
-		if (custom_printer != NULL)
+	while (node) {
+		if (custom_printer)
 			custom_printer(node->item, counter + 1);
 		else
 			printf("      (node %d, value = %p)", counter, node->item);
 
 		printf("\n");
 
-		node = node->nextNode;
+		node = node->next_node;
 		counter += 1;
 	}
 
 	printf("    ]\n--------------------------\n\n");
 }
 
-int GetNodeIndex(Node* listHeadNode, Node* _nodeToFind, void comparator(void* _item1, void* _item2, int* result))
+int get_node_index(Node* list_head_node, Node* node_to_find, void comparator(void* item1, void* item2, int* result))
 {
-	Node* currentNode = listHeadNode;
+	Node* current_node = list_head_node;
 	int counter = 0;
 
-	while (currentNode)
-	{
-		if (comparator != NULL)
-		{
+	while (current_node) {
+		if (comparator) {
 			int result;
-			comparator(currentNode->item, _nodeToFind->item, & result);
+			comparator(current_node->item, node_to_find->item, & result);
 
-			// 0 means FALSE, anything else means TRUE.
+			/* 0 means FALSE, anything else means TRUE. */
 			if (result != 0)
 				return counter;
-		}
-		else if (currentNode->item == _nodeToFind->item)
+		} else if (current_node->item == node_to_find->item)
 			return counter;
 
-		currentNode = currentNode->nextNode;
+		current_node = current_node->next_node;
 		counter += 1;
 	}
 
-	return -1;	// if the node wasn't found, return -1.
+	return -1;	/* if the node wasn't found, return -1. */
 }
 
-int GetNodeWithValueIndex(Node* listHeadNode, void* _itemOfNodeToFind, void comparator(void* _item1, void* _item2, int* result))
+int get_node_with_value_index(Node* list_head_node, void* item_of_node_to_find, void comparator(void* item1, void* item2, int* result))
 {
-	Node* currentNode = listHeadNode;
+	Node* current_node = list_head_node;
 	int counter = 0;
 
-	while (currentNode)
-	{
-		if (comparator != NULL)
-		{
+	while (current_node) {
+		if (comparator) {
 			int result;
-			comparator(currentNode->item, _itemOfNodeToFind, & result);
+			comparator(current_node->item, item_of_node_to_find, & result);
 
-			// 0 means FALSE, anything else means TRUE.
+			/* 0 means FALSE, anything else means TRUE. */
 			if (result != 0)
 				return counter;
-		}
-		else if (currentNode->item == _itemOfNodeToFind)
+		} else if (current_node->item == item_of_node_to_find)
 			return counter;
 
-		currentNode = currentNode->nextNode;
+		current_node = current_node->next_node;
 		counter += 1;
 	}
 
-	return -1;	// if the node wasn't found, return -1.
+	return -1;	/* if the node wasn't found, return -1. */
 }
 
-void AddNewNodeAtStart(Node** listHeadNode, void* _item, void comparator(void* _item1, void* _item2, int* result))
+void add_new_node_at_start(Node** list_head_node, void* item, void comparator(void* item1, void* item2, int* result))
 {
-	// If the list already has a node containing that value, exit from this function.
-	if (GetNodeWithValueIndex(* listHeadNode, _item, comparator) != -1)
+	/* If the list already has a node containing that value, exit from this function. */
+	if (get_node_with_value_index(* list_head_node, item, comparator) != -1)
 		return;
 
-	Node* newNode = malloc(sizeof(Node));
+	Node* new_node = malloc(sizeof(Node));
+	if (new_node) {
+		new_node->item = item;
+		new_node->next_node = *list_head_node;
 
-	newNode->item     = _item;
-	newNode->nextNode = * listHeadNode;
-
-	* listHeadNode = newNode;
+		*list_head_node = new_node;
+	}
 }
 
-void AddExistingNodeAtStart(Node** listHeadNode, Node* _nodeToAdd, void comparator(void* _item1, void* _item2, int* result))
+void add_existing_node_at_start(Node** list_head_node, Node* node_to_add, void comparator(void* item1, void* item2, int* result))
 {
-	// If the node already exists within this list, exit from this function.
-	if (GetNodeIndex(* listHeadNode, _nodeToAdd, comparator) != -1)
+	/* If the node already exists within this list, exit from this function. */
+	if (get_node_index(* list_head_node, node_to_add, comparator) != -1)
 		return;
 
-	_nodeToAdd->nextNode = * listHeadNode;
-
-	* listHeadNode = _nodeToAdd;
+	node_to_add->next_node = * list_head_node;
+	*list_head_node = node_to_add;
 }
 
-void AddNewNodeAtEnd(Node* listHeadNode, void* _item, void comparator(void* _item1, void* _item2, int* result))
+void add_new_node_at_end(Node* list_head_node, void* item, void comparator(void* item1, void* item2, int* result))
 {
-	// If the list already has a node containing that value, exit from this function.
-	if (GetNodeWithValueIndex(listHeadNode, _item, comparator) != -1)
+	/* If the list already has a node containing that value, exit from this function. */
+	if (get_node_with_value_index(list_head_node, item, comparator) != -1)
 		return;
 
-	Node* currentNode = listHeadNode;
+	Node* current_node = list_head_node;
 
-	while (currentNode->nextNode)
-		currentNode = currentNode->nextNode;
+	while (current_node->next_node)
+		current_node = current_node->next_node;
 
-	currentNode->nextNode = CreateNode(_item);
+	current_node->next_node = create_node(item);
 }
 
-void AddExistingNodeAtEnd(Node* listHeadNode, Node * _nodeToAdd, void comparator(void* _item1, void* _item2, int* result))
+void add_existing_node_at_end(Node* list_head_node, Node* node_to_add, void comparator(void* item1, void* item2, int* result))
 {
-	// If the node already exists within this list, exit from this function.
-	if (GetNodeIndex(listHeadNode, _nodeToAdd, comparator) != -1)
+	/* If the node already exists within this list, exit from this function. */
+	if (get_node_index(list_head_node, node_to_add, comparator) != -1)
 		return;
 
-	Node* currentNode = listHeadNode;
+	Node* current_node = list_head_node;
 
-	while (currentNode->nextNode)
-		currentNode = currentNode->nextNode;
+	while (current_node->next_node)
+		current_node = current_node->next_node;
 
-	currentNode->nextNode = _nodeToAdd;
+	current_node->next_node = node_to_add;
 }
 
-int RemoveNodeByIndex(Node** listHeadNode, int _index)
+int remove_node_by_index(Node** list_head_node, int index, void custom_free(void* item))
 {
-	if (_index < 0 || _index > ListLength(* listHeadNode) - 1)
+	if (index < 0 || index > list_length(* list_head_node) - 1)
 		return -1;
 
-	if (_index == 0)
-		return RemoveFirstNode(listHeadNode);
+	if (index == 0)
+		return remove_first_node(list_head_node, custom_free);
 
-	if (_index == ListLength(* listHeadNode) - 1)
-		return RemoveLastNode(* listHeadNode);
+	if (index == list_length(* list_head_node) - 1)
+		return remove_last_node(* list_head_node, custom_free);
 
-	// Else...
+	/* Else, save the last node that sits right before the one we want removed. */
 	
-	Node* currentNode = * listHeadNode;
+	Node* current_node = *list_head_node;
 
-	// Save the last node that sits right before the one we want removed.
-	for (int index = 1; index < _index; index ++)
-	{
-		currentNode = currentNode->nextNode;
-	}
+	for (int i = 1; i < index; i ++)
+		current_node = current_node->next_node;
 
-	Node* tempNode		  = currentNode->nextNode;
-	currentNode->nextNode = currentNode->nextNode->nextNode;
+	Node* temp_node = current_node->next_node;
+	current_node->next_node = current_node->next_node->next_node;
 
-	free(tempNode);
+	if (custom_free)
+		custom_free(temp_node->item);
+	free(temp_node);
 
-	return _index;
+	return index;
 }
 
-int RemoveNodeByValue(Node** listHeadNode, void* _item, void comparator(void* _item1, void* _item2, int* result))
+int remove_node_by_value(Node** list_head_node, void* item, void custom_free(void* item), void comparator(void* item1, void* item2, int* result))
 {
-	if ((* listHeadNode)->item == _item)
-		return RemoveFirstNode(listHeadNode);
+	if ((* list_head_node)->item == item)
+		return remove_first_node(list_head_node, custom_free);
 
-	int position = GetNodeWithValueIndex(* listHeadNode, _item, comparator);
+	int position = get_node_with_value_index(* list_head_node, item, comparator);
 
 	if (position == -1)
 		return -1;
 
-	Node* currentNode = * listHeadNode;
+	/* Save the last node that sits right before the one we want removed. */
 
-	// Save the last node that sits right before the one we want removed.
+	Node* current_node = *list_head_node;
+	
 	for (int index = 1; index < position; index ++)
-	{
-		currentNode = currentNode->nextNode;
-	}
+		current_node = current_node->next_node;
 
-	Node* tempNode = currentNode->nextNode;
-	currentNode->nextNode = currentNode->nextNode->nextNode;
+	Node* temp_node = current_node->next_node;
+	current_node->next_node = current_node->next_node->next_node;
 
-	free(tempNode);
+	if (custom_free)
+		custom_free(temp_node->item);
+	free(temp_node);
 
 	return position;
 }
 
-int RemoveFirstNode(Node** listHeadNode)
+int remove_first_node(Node** list_head_node, void custom_free(void* item))
 {
-	if ((* listHeadNode) == NULL)
+	if ((* list_head_node) == NULL)
 		return -1;
 
-	// Else... (if the first node exists)
+	/* Else... (if the first node exists) */
 
-	Node* newHeadNode = (* listHeadNode)->nextNode;
+	Node* new_head_node = (* list_head_node)->next_node;
+
+	if (custom_free)
+		custom_free((*list_head_node)->item);
+	free(* list_head_node);
 	
-	free(* listHeadNode);
-
-	* listHeadNode = newHeadNode;
+	*list_head_node = new_head_node;
 
 	return 0;
 }
 
-int RemoveLastNode(Node* listHeadNode)
+int remove_last_node(Node* list_head_node, void custom_free(void* item))
 {
-	if (listHeadNode == NULL)
+	if (list_head_node == NULL)
 		return -1;
 
-	if (listHeadNode->nextNode == NULL)		// if the list has only one node, call the corresponding removal function.
-		return RemoveFirstNode(& listHeadNode);
+	if (list_head_node->next_node == NULL)		/* if the list has only one node, call the corresponding removal function. */
+		return remove_first_node(& list_head_node, custom_free);
 
-	// Else...
+	/* Else... */
 
-	Node* currentNode = listHeadNode;
+	Node* current_node = list_head_node;
 	int index = 1;
 
-	while (currentNode->nextNode)
-	{
-		currentNode = currentNode->nextNode;
+	while (current_node->next_node) {
+		current_node = current_node->next_node;
 		index += 1;
 
-		if (currentNode->nextNode->nextNode == NULL)
-		{
-			free(currentNode->nextNode);
-			
-			currentNode->nextNode = NULL;
+		if (current_node->next_node->next_node == NULL) {
+			if (custom_free)
+				custom_free(current_node->next_node->item);
+			free(current_node->next_node);
+
+			current_node->next_node = NULL;
 
 			break;
 		}

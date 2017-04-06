@@ -5,96 +5,108 @@
 #include "Person.h"
 #include "LinkedList.h"
 
-
-#define POPULATION 10
+#define DEFAULT_POPULATION 10
 
 #define RANDOM_NUMBER(Min, Max)	\
 	((rand() % (int) ((Max) + 1) - (Min)) + (Min))
 
 
-Person* RandomPersonData()
+Person* random_person_data()
 {
-	char* FirstName[20] = { "Alex", "Ion", "Elena", "Cristina", "Maria",
-							"George", "Paul", "Ioana", "Teodor", "Andreea",
-							"Vasile", "Bogdan", "Cristian", "Daniel", "Madalina",
-							"Ovidiu", "Catalina", "Robert", "Stefania", "Liviu" };
+	char* first_name[20] = { "Alex", "Ion", "Elena", "Cristina", "Maria",
+							 "George", "Paul", "Ioana", "Teodor", "Andreea",
+							 "Vasile", "Bogdan", "Cristian", "Daniel", "Madalina",
+							 "Ovidiu", "Catalina", "Robert", "Stefania", "Liviu" };
 	
-	char* LastName [20] = { "Popescu", "Pandele", "Badea", "Barbu", "Anton",
-							"Grecu", "Ionescu", "Pintilie", "Hristache", "Nastase",
-							"Morar", "Predoiu", "Pescaru", "Tataru", "Pana",
-							"Ceapa", "Constantin", "Banu", "Ieremia", "Ciocan" };
+	char* last_name [20] = { "Popescu", "Pandele", "Badea", "Barbu", "Anton",
+							 "Grecu", "Ionescu", "Pintilie", "Hristache", "Nastase",
+							 "Morar", "Predoiu", "Pescaru", "Tataru", "Pana",
+							 "Ceapa", "Constantin", "Banu", "Ieremia", "Ciocan" };
 
 	Person* person = malloc(sizeof(Person));
-
-	strcpy(person->name, FirstName[RANDOM_NUMBER(0, 19)]);
-	strcat(person->name, " ");
-	strcat(person->name, LastName [RANDOM_NUMBER(0, 19)]);
-
-	person->age = RANDOM_NUMBER(1, 99);
+	if (person) {
+		strcpy(person->name, first_name[RANDOM_NUMBER(0, 19)]);
+		strcat(person->name, " ");
+		strcat(person->name, last_name[RANDOM_NUMBER(0, 19)]);
+		
+		person->age = RANDOM_NUMBER(1, 99);
+	}
 
 	return person;
 }
 
-Node* GeneratePersonList_DefaultPopulation()
+Node* generate_person_list_default()
 {
-	printf(" * Using default value for population count: %d\n\n", POPULATION);
+	printf(" * Using default value for population count: %d\n\n", DEFAULT_POPULATION);
 	
-	return GeneratePersonList(POPULATION, FALSE);
+	return generate_person_list(DEFAULT_POPULATION, TRUE);
 }
 
-Node* GeneratePersonList(int _population, int bAllPersonsUnique)
+Node* generate_person_list(int population, int all_persons_unique)
 {
-	Person* firstPerson  = RandomPersonData();
-	Node* personListHead = CreateNode(firstPerson);
+	Person* first_person;
+	Node* person_list_head;
 
-	for (int i = 0; i < _population - 1; i++)
-	{
-		Person* newPerson = RandomPersonData();
+	first_person = random_person_data();
+	if (first_person == NULL)
+		return NULL;
 
-		if (bAllPersonsUnique == TRUE)
-			while (GetNodeWithValueIndex(personListHead, newPerson, PersonComparatorImpl) != -1)
-				newPerson = RandomPersonData();
+	person_list_head = create_node(first_person);
 
-		AddNewNodeAtEnd(personListHead, newPerson, & PersonComparatorImpl);
+	for (int i = 0; i < population - 1; i++) {
+		Person* new_person = random_person_data();
+		if (new_person == NULL)
+			break;
+
+		if (all_persons_unique == TRUE)
+			while (get_node_with_value_index(person_list_head, new_person, person_comparator_impl) != -1)
+				new_person = random_person_data();
+
+		add_new_node_at_end(person_list_head, new_person, & person_comparator_impl);
 	}
 
-	return personListHead;
+	return person_list_head;
 }
 
-void PrintPersonList(Node* personListHead)
+void print_person_list(Node* person_list_head)
 {
-	Node* currentNode = personListHead;
+	Node* current_node = person_list_head;
 	int counter = 1;
 
-	while (currentNode)
-	{
-		Person* person = (Person *)currentNode->item;
+	while (current_node)	{
+		Person* person = (Person *) current_node->item;
 
 		if (person->age == 1)
 			printf("%d) %s - %d year old\n", counter ++, person->name, person->age);
 		else
 			printf("%d) %s - %d years old\n", counter ++, person->name, person->age);
 
-		currentNode = currentNode->nextNode;
+		current_node = current_node->next_node;
 	}
 
 	printf("--------------------------\n\n");
 }
 
-void PersonComparatorImpl(void* _person1, void* _person2, int* result)
+void person_comparator_impl(void* person1, void* person2, int* result)
 {
-	Person* p1 = (Person *) _person1;
-	Person* p2 = (Person *) _person2;
+	Person* p1 = (Person *) person1;
+	Person* p2 = (Person *) person2;
 
-	* result = 0;	// consider the items are different.
+	*result = 0;	/* consider the items are different. */
 	
 	if (strcmp(p1->name, p2->name) == 0 && p1->age == p2->age)
-		* result = 1;
+		*result = 1;
 }
 
-void PersonPrinterImpl(void* _person, int _posInList)
+void person_printer_impl(void* person, int pos_in_list)
 {
-	Person* p = (Person *) _person;
+	Person* p = (Person *) person;
 
-	printf("      %d) %s is %d years old.", _posInList, p->name, p->age);
+	printf("      %d) %s is %d years old.", pos_in_list, p->name, p->age);
 }
+
+void person_removal_impl(void* person)
+{
+	free(person);
+}
+

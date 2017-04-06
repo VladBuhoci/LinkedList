@@ -12,110 +12,123 @@
  * Implementation for the list's printer function, suggesting
  * the way lists of integers should be printed.
  */
-void CustomIntegerPrinter(void* _number, int _posInList)
+void custom_integer_printer(void* number, int pos_in_list)
 {
-	printf("      {index %d with value = %d}", _posInList, (int) (intptr_t) _number);
+	printf("      {index %d with value = %d}", pos_in_list, (int) (intptr_t) number);
 }
 
-/**
- * Main.
- */
-int main()
+/** Application entry point. */
+int main(int argc, char* argv[])
 {
-	// We can still make a list with primitive values, after the changes done to the list,
-	// although we need to cast to void*.
+	/* We can still make a list with primitive values, after the changes done to the list, although we need to cast to (void *). */
+	/* Uncomment to test this. */
 	/*
-	Node* ListHeadNode = NULL;
-	PrintList(ListHeadNode, TRUE, NULL);
+	Node* list_head_node = NULL;
+	print_list(list_head_node, TRUE, NULL);
 
-	ListHeadNode = CreateNode((void *) 12);
-	PrintList(ListHeadNode, TRUE, NULL);
+	list_head_node = create_node((void *)12);
+	print_list(list_head_node, TRUE, NULL);
 
-	Node* nextNode = CreateNode((void *) -2);
-	ListHeadNode->nextNode = nextNode;
-	PrintList(ListHeadNode, FALSE, CustomIntegerPrinter);
+	Node* next_node = create_node((void *)-2);
+	list_head_node->next_node = next_node;
+	print_list(list_head_node, FALSE, custom_integer_printer);
 
-	AddNewNodeAtStart(& ListHeadNode, (void *) 3, NULL);
-	PrintList(ListHeadNode, TRUE, CustomIntegerPrinter);
+	add_new_node_at_start(& list_head_node, (void *)3, NULL);
+	print_list(list_head_node, TRUE, custom_integer_printer);
 
-	Node* testNode = CreateNode((void *) -17);
-	AddExistingNodeAtStart(& ListHeadNode, testNode, NULL);
-	PrintList(ListHeadNode, FALSE, NULL);
+	Node* test_node = create_node((void *)-17);
+	add_existing_node_at_start(&list_head_node, test_node, NULL);
+	print_list(list_head_node, FALSE, NULL);
 
 	// Test if we can create and add a node with a certain value to a list,
 	// when the list already contains a node which stores that value. (result: nothing happens)
-	AddNewNodeAtStart(& ListHeadNode, (void *) 3, NULL);
-	PrintList(ListHeadNode, FALSE, CustomIntegerPrinter);
+	add_new_node_at_start(& list_head_node, (void *)3, NULL);
+	print_list(list_head_node, FALSE, custom_integer_printer);
 
 	// Test if we can add a node which is already part of this list. (result: nothing happens)
-	AddExistingNodeAtStart(& ListHeadNode, nextNode, NULL);
-	PrintList(ListHeadNode, TRUE, CustomIntegerPrinter);
+	add_existing_node_at_start(& list_head_node, next_node, NULL);
+	print_list(list_head_node, TRUE, custom_integer_printer);
 
-	AddNewNodeAtEnd(ListHeadNode, (void *) 45, NULL);
-	PrintList(ListHeadNode, TRUE, NULL);
+	add_new_node_at_end(list_head_node, (void *)45, NULL);
+	print_list(list_head_node, TRUE, NULL);
 
-	Node* testNode2 = CreateNode((void *) -18);
-	AddExistingNodeAtEnd(ListHeadNode, testNode2, NULL);
-	PrintList(ListHeadNode, TRUE, CustomIntegerPrinter);
+	Node* testNode2 = create_node((void *)-18);
+	add_existing_node_at_end(list_head_node, testNode2, NULL);
+	print_list(list_head_node, TRUE, custom_integer_printer);
 
-	RemoveNodeByIndex(& ListHeadNode, 4);		// 4 is an index here.
-	PrintList(ListHeadNode, FALSE, CustomIntegerPrinter);
+	remove_node_by_index(& list_head_node, 4, NULL);		// 4 is an index here.
+	print_list(list_head_node, FALSE, custom_integer_printer);
 
-	RemoveNodeByValue(& ListHeadNode, (void *) 12, NULL);
-	PrintList(ListHeadNode, TRUE, NULL);
+	remove_node_by_value(& list_head_node, (void *)12, NULL, NULL);
+	print_list(list_head_node, TRUE, NULL);
 
-	RemoveFirstNode(& ListHeadNode);
-	PrintList(ListHeadNode, TRUE, NULL);
+	remove_first_node(& list_head_node, NULL);
+	print_list(list_head_node, TRUE, NULL);
 
-	AddNewNodeAtStart(& ListHeadNode, (void *) 314, NULL);
-	PrintList(ListHeadNode, TRUE, NULL);
+	add_new_node_at_start(& list_head_node, (void *)314, NULL);
+	print_list(list_head_node, TRUE, NULL);
 
-	RemoveLastNode(ListHeadNode);
-	PrintList(ListHeadNode, TRUE, CustomIntegerPrinter);
+	remove_last_node(list_head_node, NULL);
+	print_list(list_head_node, TRUE, custom_integer_printer);
 	*/
-
+	
+	Node* person_list_head;
 	int population;
 
-	printf(" ~ Number of persons to generate: ");
-	scanf("%d", & population); getchar();
-	printf("\n");
-	
 	srand(time(NULL));
 
-	Node* PersonListHead;
-	
+	if (argc > 1)
+		population = atoi(argv[1]);
+	else {
+		printf(" ~ Number of persons to generate: ");
+		scanf("%d", &population); getchar();
+		printf("\n");
+	}
+
 	if (population > 0)
-		PersonListHead = GeneratePersonList(population, TRUE);
+		person_list_head = generate_person_list(population, TRUE);
 	else
-		PersonListHead = GeneratePersonList_DefaultPopulation();
+		person_list_head = generate_person_list_default();
 
-	// Output the list.
-	PrintPersonList(PersonListHead);
+	/* If population list creation was successful, perform a few tests. */
+	if (person_list_head) {
+		/* Output the list's content. */
+		print_person_list(person_list_head);
 
-	// Manually adding people to the list, with the structure itself.
-	Person* anotherPerson = malloc(sizeof(Person));
-	strcpy(anotherPerson->name, "Vlad Buhoci");
-	anotherPerson->age  = 21;
+		/* Manually adding people to the list, using the structure itself. */
+		Person* another_person = malloc(sizeof(Person));
+		if (another_person) {
+			strcpy(another_person->name, "Vlad Buhoci");
+			another_person->age = 21;
 
-	AddNewNodeAtStart(& PersonListHead, anotherPerson, PersonComparatorImpl);
+			add_new_node_at_start(&person_list_head, another_person, person_comparator_impl);
+		}
 
-	// Manually adding people to the list, using a function.
-	AddNewNodeAtEnd(PersonListHead, RandomPersonData(), PersonComparatorImpl);
+		/* Checking if the list accepts duplicates. (it doesn't) */
+		Person* another_person_2 = malloc(sizeof(Person));
+		if (another_person_2) {
+			strcpy(another_person_2->name, "Vlad Buhoci");
+			another_person_2->age = 21;
 
-	// Checking if the list accepts duplicates. (it doesn't)
-	Person* anotherPerson2 = malloc(sizeof(Person));
-	strcpy(anotherPerson2->name, "Vlad Buhoci");
-	anotherPerson2->age = 21;
+			add_new_node_at_end(person_list_head, another_person_2, person_comparator_impl);
+		}
 
-	AddNewNodeAtEnd(PersonListHead, anotherPerson2, PersonComparatorImpl);
-	
-	// Show the content of the new list, after changes:
-	// (both functions work)
+		/* Show the content of the new list, after changes (both functions work): */
+		//print_person_list(person_list_head);						/* Custom Person printer function. */
 
-	//PrintPersonList(PersonListHead);						// Custom Person printer function.
+		print_list(person_list_head, FALSE, person_printer_impl);	/* List's printer function, with custom Person printing helper function. */
 
-	PrintList(PersonListHead, FALSE, PersonPrinterImpl);	// List's printer function, with custom Person printing helper function.
+		remove_node_by_index(&person_list_head, 3, person_removal_impl);
+		remove_first_node(&person_list_head, person_removal_impl);
+		print_list(person_list_head, TRUE, person_printer_impl);
+	}
+	else {
+		printf("Failed to generate a list of persons.\n");
+
+		getchar();
+		return EXIT_FAILURE;
+	}
 
 	getchar();
-	return 0;
+	return EXIT_SUCCESS;
 }

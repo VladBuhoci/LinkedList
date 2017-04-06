@@ -15,34 +15,37 @@ typedef struct person_t
  * 
  * @return Returns a reference to the newly created Person structure.
  */
-Person* RandomPersonData();
+Person* random_person_data();
 
 /**
  * Creates a new list of Person structures, with randomized values.
- * NOTE: Sometimes, a duplicate might be generated and thus not added to the list.
+ * NOTE: This will never add duplicates to the list, by default.
  * 
  * @return Returns a reference to the first node of this list.
  */
-Node* GeneratePersonList_DefaultPopulation();
+Node* generate_person_list_default();
 
 /**
  * Creates a new list of Person structures, with randomized values.
  * NOTE: Sometimes, a duplicate might be generated and thus not added to the list,
  * 		 if bAllPersonsUnique = FALSE.
  * 
- * @param _population 		 The number of people to create and store in a list.
- * @param _bAllPersonsUnique If TRUE, the generation process will test each new person to make sure
+ * @param population 		 The number of people to create and store in a list.
+ * @param all_persons_unique If TRUE, the generation process will test each new person to make sure
  *							 there will not be any duplicates present, at the end, in the list.
  * @return Returns a reference to the first node of this list.
  */
-Node* GeneratePersonList(int _population, int bAllPersonsUnique);
+Node* generate_person_list(int population, int all_persons_unique);
 
 /** Utility function to print the content of a list filled with Persons. */
-void PrintPersonList(Node* personListHead);
+void print_person_list(Node* person_list_head);
 
 /** Implementation for the list's comparator, to support Person-to-Person comparisons. */
-void PersonComparatorImpl(void* _person1, void* _person2, int* result);
+void person_comparator_impl(void* person1, void* person2, int* result);
 
 /** Implementation for the list's printer, to adjust the way Person data is shown. */
-void PersonPrinterImpl(void* _person, int _posInList);
+void person_printer_impl(void* person, int pos_in_list);
+
+/** Implementation for the list's removal functions, making sure resources are freed correctly. */
+void person_removal_impl(void* person);
 
