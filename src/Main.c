@@ -23,53 +23,7 @@ int main(int argc, char* argv[])
 	/* We can still make a list with primitive values, after the changes done to the list, although we need to cast to (void *). */
 	/* Uncomment to test this. */
 	/*
-	Node* list_head_node = NULL;
-	print_list(list_head_node, TRUE, NULL);
-
-	list_head_node = create_node((void *)12);
-	print_list(list_head_node, TRUE, NULL);
-
-	Node* next_node = create_node((void *)-2);
-	list_head_node->next_node = next_node;
-	print_list(list_head_node, FALSE, custom_integer_printer);
-
-	add_new_node_at_start(& list_head_node, (void *)3, NULL);
-	print_list(list_head_node, TRUE, custom_integer_printer);
-
-	Node* test_node = create_node((void *)-17);
-	add_existing_node_at_start(&list_head_node, test_node, NULL);
-	print_list(list_head_node, FALSE, NULL);
-
-	// Test if we can create and add a node with a certain value to a list,
-	// when the list already contains a node which stores that value. (result: nothing happens)
-	add_new_node_at_start(& list_head_node, (void *)3, NULL);
-	print_list(list_head_node, FALSE, custom_integer_printer);
-
-	// Test if we can add a node which is already part of this list. (result: nothing happens)
-	add_existing_node_at_start(& list_head_node, next_node, NULL);
-	print_list(list_head_node, TRUE, custom_integer_printer);
-
-	add_new_node_at_end(list_head_node, (void *)45, NULL);
-	print_list(list_head_node, TRUE, NULL);
-
-	Node* testNode2 = create_node((void *)-18);
-	add_existing_node_at_end(list_head_node, testNode2, NULL);
-	print_list(list_head_node, TRUE, custom_integer_printer);
-
-	remove_node_by_index(& list_head_node, 4, NULL);		// 4 is an index here.
-	print_list(list_head_node, FALSE, custom_integer_printer);
-
-	remove_node_by_value(& list_head_node, (void *)12, NULL, NULL);
-	print_list(list_head_node, TRUE, NULL);
-
-	remove_first_node(& list_head_node, NULL);
-	print_list(list_head_node, TRUE, NULL);
-
-	add_new_node_at_start(& list_head_node, (void *)314, NULL);
-	print_list(list_head_node, TRUE, NULL);
-
-	remove_last_node(list_head_node, NULL);
-	print_list(list_head_node, TRUE, custom_integer_printer);
+Damn! your spelling is fine
 	*/
 	
 	Node* person_list_head;
